@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Game Path Planner — презентация</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@5/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="https://unpkg.com/highlight.js@11.9.0/styles/github.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Персональный планировщик прогресса для конкретной игры: варианты событий к цели, оценка времени с учётом прокачки и знания карты." />
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <section data-background-color="#0b132b" data-background-gradient="radial-gradient(#0b132b, #1c2541)">
+      <h1 style="color:#fff">Game Path Planner</h1>
+      <h3 style="color:#e0e0e0">Персональный план к игровой цели с оценкой времени</h3>
+      <p style="color:#c7f0ff">Фокус: одна конкретная игра (замените Игра X на вашу)</p>
+      <p style="color:#9ad1ff">Автор: @PetrosiunArtem</p>
+      <aside class="notes">
+        Приложение строит оптимальный маршрут к цели в игре, учитывая прокачку, знание карты и инвентарь.
+        Показывает альтернативы и прогноз времени.
+      </aside>
+    </section>
+
+    <section>
+      <h2>Проблема → Решение</h2>
+      <ul>
+        <li>Гайды и вики не персонализированы под ваш прогресс и стиль.</li>
+        <li>Непонятно, сколько времени займёт цель.</li>
+        <li>Лишние шаги из‑за незнания карты.</li>
+      </ul>
+      <ul class="fragment">
+        <li>Персональный план из действий к цели.</li>
+        <li>2–3 альтернативных маршрута с ETA и рисками.</li>
+        <li>Учет прокачки, инвентаря и «знания карты».</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Почему лучше существующих</h2>
+      <ul>
+        <li><b>Персонализация</b> маршрутов и времени.</li>
+        <li><b>Прозрачность</b>: видно вес каждого шага.</li>
+        <li><b>Актуальность</b>: версии под патчи игры.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Целевая игра</h2>
+      <p>Игра X (замените на нужную), платформа: ПК/консоль</p>
+      <p class="muted">MVP поддерживает одну игру, далее — расширение.</p>
+    </section>
+
+    <section>
+      <h2>Пользовательские сценарии</h2>
+      <ol>
+        <li><b>Быстрый план к цели</b>: выбрать цель → заполнить профиль → получить 3 маршрута с ETA.</li>
+        <li class="fragment"><b>Пересчёт после прогресса</b>: отметить сделанное → уточнить время.</li>
+        <li class="fragment"><b>Сравнение путей</b>: «быстрее» vs «надёжнее» vs «ресурсосберегающий».</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Архитектура (MVP)</h2>
+      <ul>
+        <li>Граф действий (узлы/рёбра) с весами: время/риск/ресурсы.</li>
+        <li>Планировщик A*/Дейкстра с модификаторами игрока.</li>
+        <li>Неопределённость: min/median/p95 + Монте‑Карло.</li>
+      </ul>
+      <p class="muted">Данные: вики/гайды и краудсорс времени.</p>
+    </section>
+
+    <section>
+      <h2>Дизайн — Главная</h2>
+      <div class="wireframe">
+        <div class="wf-header">Header — Game Path Planner</div>
+        <div class="wf-body">
+          <div class="wf-panel">
+            <div class="wf-title">Выбор игры</div>
+            <div class="wf-tile">Игра X</div>
+            <div class="wf-tile muted">…</div>
+          </div>
+          <div class="wf-panel">
+            <div class="wf-title">Выбор цели</div>
+            <div class="wf-list">
+              <div class="wf-item">Получить предмет X</div>
+              <div class="wf-item">Закрыть квест Y</div>
+              <div class="wf-item">Достичь ранга Z</div>
+            </div>
+          </div>
+        </div>
+        <div class="wf-footer"><button>Начать план</button></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Дизайн — Профиль/прогресс</h2>
+      <div class="wireframe">
+        <div class="wf-header">Профиль игрока</div>
+        <div class="wf-columns">
+          <div class="wf-col">
+            <div class="wf-title">Прокачка</div>
+            <div class="wf-chip">Уровень 35</div>
+            <div class="wf-chip">Перк «Стелс II»</div>
+            <div class="wf-chip">Меч +5</div>
+          </div>
+          <div class="wf-col">
+            <div class="wf-title">Карта</div>
+            <div class="wf-map">Открыто: 62%<br/>Путевые точки: 14</div>
+          </div>
+          <div class="wf-col">
+            <div class="wf-title">Инвентарь</div>
+            <div class="wf-list small">
+              <div class="wf-item">Ключ Старого города</div>
+              <div class="wf-item">Зелья 5 шт.</div>
+            </div>
+          </div>
+        </div>
+        <div class="wf-footer"><button>Рассчитать план</button></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Дизайн — План и альтернативы</h2>
+      <div class="wireframe">
+        <div class="wf-header">Цель: Получить предмет X</div>
+        <div class="wf-columns">
+          <div class="wf-col">
+            <div class="wf-title">Маршрут A (быстрее)</div>
+            <ol class="wf-steps">
+              <li>Добраться до Региона 3 (10–15)</li>
+              <li>Подземелье А (15–25)</li>
+              <li>Босс «Страж» (5–12)</li>
+            </ol>
+            <div class="wf-badge success">Итого: 35–52 мин</div>
+          </div>
+          <div class="wf-col">
+            <div class="wf-title">Маршрут B (надёжнее)</div>
+            <ol class="wf-steps">
+              <li>Фарм ресурсов (10–20)</li>
+              <li>Квест NPC (8–12)</li>
+            </ol>
+            <div class="wf-badge">Итого: 40–60 мин</div>
+          </div>
+          <div class="wf-col">
+            <div class="wf-title">Маршрут C (эконом)</div>
+            <ol class="wf-steps">
+              <li>Маршрут через крышу (12–18)</li>
+              <li>Пазл в библиотеке (6–10)</li>
+            </ol>
+            <div class="wf-badge warn">Итого: 30–45 • высокий риск</div>
+          </div>
+        </div>
+        <div class="wf-footer"><button>Экспорт в чеклист</button> <button class="ghost">Пересчитать</button></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>REST API (черновик)</h2>
+      <p>Base: <code>/api/v1</code></p>
+      <ul>
+        <li>GET <code>/games/{id}/goals</code> — список целей</li>
+        <li>POST <code>/plans</code> — расчёт плана</li>
+        <li>PATCH <code>/profiles/{id}/progress</code> — обновление прогресса</li>
+        <li>POST <code>/telemetry/time</code> — фактическое время шагов</li>
+        <li>GET <code>/content/version</code> — версия контента</li>
+        <li>GET <code>/actions/{id}</code> — карточка действия</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>Пример запроса/ответа</h3>
+      <pre><code class="language-json">{
+  "goal_id": "item_x",
+  "game_id": "game_x",
+  "profile": {
+    "level": 35,
+    "perks": ["stealth_2"],
+    "inventory": ["old_town_key"],
+    "map_knowledge": {"opened_percent": 62, "waypoints": 14},
+    "skill_profile": {"combat": 0.7, "puzzle": 0.5, "stealth": 0.8}
+  },
+  "preferences": {"optimize": "time", "risk_tolerance": "medium"}
+}</code></pre>
+      <pre><code class="language-json">{
+  "plans": [
+    {
+      "id": "A",
+      "label": "быстрее",
+      "eta_min": 35,
+      "eta_max": 52,
+      "confidence": 0.72,
+      "steps": [
+        {"action_id":"travel_r3","title":"Регион 3","eta":"10-15"},
+        {"action_id":"dungeon_a","title":"Подземелье А","eta":"15-25"},
+        {"action_id":"boss_guard","title":"Босс Страж","eta":"5-12"}
+      ]
+    }
+  ]
+}</code></pre>
+    </section>
+
+    <section>
+      <h2>Данные и калибровка</h2>
+      <ul>
+        <li>Эталон: вики/гайды/спидран-сводки.</li>
+        <li>Краудсорс: пользователи подтверждают время.</li>
+        <li>Храним min/median/p95; применяем коэффициенты игрока.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Юридика и безопасность</h2>
+      <ul>
+        <li>Без чтения памяти процесса (античит).</li>
+        <li>Импорт сейва офлайн и по согласию, минимум данных.</li>
+        <li>Соблюдение ToS, публичные источники.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Бизнес‑модель и метрики</h2>
+      <ul>
+        <li>Freemium + PRO аналитика.</li>
+        <li>DLC‑пакеты под сложные цели/боссы.</li>
+        <li>MAPE ETA, завершения планов, D7 ретеншн.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>План MVP (2–4 недели)</h2>
+      <ol>
+        <li>Одна игра, 2–3 цели, граф 20–40 действий.</li>
+        <li>Профиль → расчёт → альтернативы → чеклист.</li>
+        <li>Сбор фактического времени.</li>
+      </ol>
+    </section>
+
+    <section data-background="#111" data-background-gradient="radial-gradient(#111, #222)">
+      <h2 style="color:#fff">Спасибо!</h2>
+      <p style="color:#ddd">Готов адаптировать под выбранную игру.</p>
+      <p style="color:#9ad1ff">github pages ready • PDF: ?print-pdf</p>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://unpkg.com/reveal.js@5/dist/reveal.js"></script>
+<script src="https://unpkg.com/reveal.js@5/plugin/highlight/highlight.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    controls: true,
+    progress: true,
+    center: true,
+    transition: 'fade',
+    plugins: [ RevealHighlight ],
+    pdfSeparateFragments: false
+  });
+</script>
+</body>
+</html>
