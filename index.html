@@ -2,252 +2,263 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <title>Game Path Planner — презентация</title>
+  <title>Cuphead Path Planner — MVP презентация</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Reveal.js -->
   <link rel="stylesheet" href="https://unpkg.com/reveal.js@5/dist/reveal.css">
   <link rel="stylesheet" href="https://unpkg.com/reveal.js@5/dist/theme/white.css" id="theme">
+  <!-- Code highlight -->
   <link rel="stylesheet" href="https://unpkg.com/highlight.js@11.9.0/styles/github.min.css">
+  <!-- Custom styles -->
   <link rel="stylesheet" href="styles.css">
-  <meta name="description" content="Персональный планировщик прогресса для конкретной игры: варианты событий к цели, оценка времени с учётом прокачки и знания карты." />
+  <meta name="description" content="MVP: персональный планировщик прогресса для Cuphead. Маршруты к целям, оценка времени и рекомендации лоадаута с учетом навыков игрока." />
 </head>
 <body>
 <div class="reveal">
   <div class="slides">
 
+    <!-- 1. Титул -->
     <section data-background-color="#0b132b" data-background-gradient="radial-gradient(#0b132b, #1c2541)">
-      <h1 style="color:#fff">Game Path Planner</h1>
-      <h3 style="color:#e0e0e0">Персональный план к игровой цели с оценкой времени</h3>
-      <p style="color:#c7f0ff">Фокус: одна конкретная игра (замените Игра X на вашу)</p>
-      <p style="color:#9ad1ff">Автор: @PetrosiunArtem</p>
-      <aside class="notes">
-        Приложение строит оптимальный маршрут к цели в игре, учитывая прокачку, знание карты и инвентарь.
-        Показывает альтернативы и прогноз времени.
-      </aside>
+      <h1 style="color:#fff">Cuphead Path Planner</h1>
+      <h3 style="color:#e0e0e0">Персональные маршруты к целям + оценка времени</h3>
+      <p style="color:#9ad1ff">MVP для одной игры — Cuphead</p>
+      <p style="color:#c7f0ff">Автор: @PetrosiunArtem</p>
+      <aside class="notes">Питч: строим лучший порядок уровней/покупок/практик под навыки игрока, показываем альтернативы и ETA.</aside>
     </section>
 
+    <!-- 2. Описание идеи (из брифа) -->
     <section>
-      <h2>Проблема → Решение</h2>
+      <h2>Описание идеи</h2>
+      <h3>Какую проблему решаем?</h3>
       <ul>
-        <li>Гайды и вики не персонализированы под ваш прогресс и стиль.</li>
-        <li>Непонятно, сколько времени займёт цель.</li>
-        <li>Лишние шаги из‑за незнания карты.</li>
+        <li>Гайды универсальны, но не учитывают <b>ваши навыки, оружие и прогресс</b>.</li>
+        <li>Игроку сложно оценить, <b>сколько времени</b> займет цель и <b>какой порядок</b> шагов лучше.</li>
       </ul>
-      <ul class="fragment">
-        <li>Персональный план из действий к цели.</li>
-        <li>2–3 альтернативных маршрута с ETA и рисками.</li>
-        <li>Учет прокачки, инвентаря и «знания карты».</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Почему лучше существующих</h2>
+      <h3>Основной функционал</h3>
       <ul>
-        <li><b>Персонализация</b> маршрутов и времени.</li>
-        <li><b>Прозрачность</b>: видно вес каждого шага.</li>
-        <li><b>Актуальность</b>: версии под патчи игры.</li>
+        <li>Выбор цели (S‑Rank, Pacifist, все оружия до Isle III).</li>
+        <li>Ввод профиля: оружия/чары/супер‑арты + навыковый профиль (точность, парри, выживаемость, движение, знание уровней).</li>
+        <li>Построение 2–3 альтернативных маршрутов с ETA и шансом успеха.</li>
+      </ul>
+      <h3>Чем лучше существующих?</h3>
+      <ul>
+        <li><b>Персонализация</b> под навыки и текущий лоадаут.</li>
+        <li><b>Прозрачные</b> расчеты времени и вероятностей, объяснение выбора маршрута.</li>
+        <li><b>Фокус на Cuphead</b>: цели и метрики релевантны (S‑Rank критерии, Pacifist, монеты, DPS по фазам).</li>
       </ul>
     </section>
 
-    <section>
-      <h2>Целевая игра</h2>
-      <p>Игра X (замените на нужную), платформа: ПК/консоль</p>
-      <p class="muted">MVP поддерживает одну игру, далее — расширение.</p>
-    </section>
-
+    <!-- 3. Пользовательские сценарии -->
     <section>
       <h2>Пользовательские сценарии</h2>
       <ol>
-        <li><b>Быстрый план к цели</b>: выбрать цель → заполнить профиль → получить 3 маршрута с ETA.</li>
-        <li class="fragment"><b>Пересчёт после прогресса</b>: отметить сделанное → уточнить время.</li>
-        <li class="fragment"><b>Сравнение путей</b>: «быстрее» vs «надёжнее» vs «ресурсосберегающий».</li>
+        <li><b>Все оружия до Isle III</b><br/>
+          Игрок выбирает цель → отмечает пройденные Run‑and‑Gun/монеты → план получает оптимальный порядок монет и покупок (Roundabout/Spread/Charge).
+        </li>
+        <li class="fragment"><b>S‑Rank на Isle I</b><br/>
+          Вводит навыки → получает рекомендованный лоадаут + план практик по парри → порядок боссов с ETA и кол-вом попыток.
+        </li>
+        <li class="fragment"><b>Pacifist на Run‑and‑Gun</b><br/>
+          Получает маршрут, ключевые тайминги парри и точки риска → после каждой попытки обновляет прогресс, план пересчитывается.
+        </li>
       </ol>
     </section>
 
-    <section>
-      <h2>Архитектура (MVP)</h2>
-      <ul>
-        <li>Граф действий (узлы/рёбра) с весами: время/риск/ресурсы.</li>
-        <li>Планировщик A*/Дейкстра с модификаторами игрока.</li>
-        <li>Неопределённость: min/median/p95 + Монте‑Карло.</li>
-      </ul>
-      <p class="muted">Данные: вики/гайды и краудсорс времени.</p>
-    </section>
-
+    <!-- 4. Дизайн — Главная -->
     <section>
       <h2>Дизайн — Главная</h2>
       <div class="wireframe">
-        <div class="wf-header">Header — Game Path Planner</div>
+        <div class="wf-header">Cuphead Path Planner — Главная</div>
         <div class="wf-body">
           <div class="wf-panel">
-            <div class="wf-title">Выбор игры</div>
-            <div class="wf-tile">Игра X</div>
-            <div class="wf-tile muted">…</div>
+            <div class="wf-title">Цель</div>
+            <div class="wf-item">Все оружия до Isle III</div>
+            <div class="wf-item">S‑Rank на Isle I</div>
+            <div class="wf-item">Pacifist Run‑and‑Gun</div>
           </div>
           <div class="wf-panel">
-            <div class="wf-title">Выбор цели</div>
-            <div class="wf-list">
-              <div class="wf-item">Получить предмет X</div>
-              <div class="wf-item">Закрыть квест Y</div>
-              <div class="wf-item">Достичь ранга Z</div>
-            </div>
-          </div>
-        </div>
-        <div class="wf-footer"><button>Начать план</button></div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Дизайн — Профиль/прогресс</h2>
-      <div class="wireframe">
-        <div class="wf-header">Профиль игрока</div>
-        <div class="wf-columns">
-          <div class="wf-col">
-            <div class="wf-title">Прокачка</div>
-            <div class="wf-chip">Уровень 35</div>
-            <div class="wf-chip">Перк «Стелс II»</div>
-            <div class="wf-chip">Меч +5</div>
-          </div>
-          <div class="wf-col">
-            <div class="wf-title">Карта</div>
-            <div class="wf-map">Открыто: 62%<br/>Путевые точки: 14</div>
-          </div>
-          <div class="wf-col">
-            <div class="wf-title">Инвентарь</div>
-            <div class="wf-list small">
-              <div class="wf-item">Ключ Старого города</div>
-              <div class="wf-item">Зелья 5 шт.</div>
-            </div>
+            <div class="wf-title">Профиль навыков</div>
+            <div class="wf-chip">accuracy 0.55</div>
+            <div class="wf-chip">parry 0.40</div>
+            <div class="wf-chip">survival 0.50</div>
+            <div class="wf-chip">movement 0.60</div>
+            <div class="wf-chip">patterns 0.45</div>
           </div>
         </div>
         <div class="wf-footer"><button>Рассчитать план</button></div>
       </div>
     </section>
 
+    <!-- 5. Дизайн — Профиль/Прогресс -->
     <section>
-      <h2>Дизайн — План и альтернативы</h2>
+      <h2>Дизайн — Профиль и прогресс</h2>
       <div class="wireframe">
-        <div class="wf-header">Цель: Получить предмет X</div>
+        <div class="wf-header">Профиль игрока</div>
         <div class="wf-columns">
           <div class="wf-col">
-            <div class="wf-title">Маршрут A (быстрее)</div>
-            <ol class="wf-steps">
-              <li>Добраться до Региона 3 (10–15)</li>
-              <li>Подземелье А (15–25)</li>
-              <li>Босс «Страж» (5–12)</li>
-            </ol>
-            <div class="wf-badge success">Итого: 35–52 мин</div>
+            <div class="wf-title">Оружия/чары</div>
+            <div class="wf-chip">Peashooter</div>
+            <div class="wf-chip">Smoke Bomb</div>
+            <div class="wf-chip">Super Art I</div>
           </div>
           <div class="wf-col">
-            <div class="wf-title">Маршрут B (надёжнее)</div>
-            <ol class="wf-steps">
-              <li>Фарм ресурсов (10–20)</li>
-              <li>Квест NPC (8–12)</li>
-            </ol>
-            <div class="wf-badge">Итого: 40–60 мин</div>
+            <div class="wf-title">Статус уровней</div>
+            <div class="wf-item">Forest Follies — completed</div>
+            <div class="wf-item">Treetop Trouble — not started</div>
+            <div class="wf-item">Botanic Panic — contract</div>
           </div>
           <div class="wf-col">
-            <div class="wf-title">Маршрут C (эконом)</div>
-            <ol class="wf-steps">
-              <li>Маршрут через крышу (12–18)</li>
-              <li>Пазл в библиотеке (6–10)</li>
-            </ol>
-            <div class="wf-badge warn">Итого: 30–45 • высокий риск</div>
+            <div class="wf-title">Навыки/знание</div>
+            <div class="wf-item">Parry: 0.40</div>
+            <div class="wf-item">Survival: 0.50</div>
+            <div class="wf-item">Familiarity (Goopy): 0.2</div>
           </div>
         </div>
-        <div class="wf-footer"><button>Экспорт в чеклист</button> <button class="ghost">Пересчитать</button></div>
+        <div class="wf-footer"><button>Обновить прогресс</button></div>
       </div>
     </section>
 
+    <!-- 6. Дизайн — План + альтернативы -->
     <section>
-      <h2>REST API (черновик)</h2>
+      <h2>Дизайн — План и альтернативы</h2>
+      <div class="wireframe">
+        <div class="wf-header">Цель: S‑Rank на Isle I</div>
+        <div class="wf-columns">
+          <div class="wf-col">
+            <div class="wf-title">A — быстрее</div>
+            <ol class="wf-steps">
+              <li>Forest Follies (5 монет) — 6–10</li>
+              <li>Покупка Roundabout — &lt;1</li>
+              <li>Botanic Panic (S) — 3–6 • попыток 1.4</li>
+              <li>Practice Parry — 5</li>
+              <li>Goopy Le Grande (S) — 3–8 • попыток 1.8</li>
+            </ol>
+            <div class="wf-badge success">Итого: 25–40 мин</div>
+          </div>
+          <div class="wf-col">
+            <div class="wf-title">B — надёжнее</div>
+            <ol class="wf-steps">
+              <li>Practice Parry — 10</li>
+              <li>Forest Follies (5 монет) — 7–12</li>
+              <li>Покупка Spread — &lt;1</li>
+              <li>Goopy Le Grande (S) — 4–7 • попыток 1.3</li>
+            </ol>
+            <div class="wf-badge">Итого: 30–45 мин</div>
+          </div>
+          <div class="wf-col">
+            <div class="wf-title">C — экономия монет</div>
+            <ol class="wf-steps">
+              <li>Секретная монета — 1–2</li>
+              <li>Treetop Trouble (5 монет) — 7–12</li>
+              <li>Покупка Charge — &lt;1</li>
+            </ol>
+            <div class="wf-badge warn">Итого: 20–35 • высокий риск</div>
+          </div>
+        </div>
+        <div class="wf-footer"><button>Экспорт чеклист</button> <button class="ghost">Пересчитать</button></div>
+      </div>
+    </section>
+
+    <!-- 7. API -->
+    <section>
+      <h2>Описание API (REST)</h2>
       <p>Base: <code>/api/v1</code></p>
       <ul>
-        <li>GET <code>/games/{id}/goals</code> — список целей</li>
-        <li>POST <code>/plans</code> — расчёт плана</li>
-        <li>PATCH <code>/profiles/{id}/progress</code> — обновление прогресса</li>
-        <li>POST <code>/telemetry/time</code> — фактическое время шагов</li>
+        <li>GET <code>/game/cuphead/goals</code> — список целей</li>
+        <li>POST <code>/game/cuphead/plan</code> — расчёт плана по профилю</li>
+        <li>PATCH <code>/profiles/{id}/progress</code> — прогресс уровней/покупок</li>
+        <li>POST <code>/telemetry/boss_attempt</code> — факт попытки босса</li>
+        <li>POST <code>/telemetry/run_level</code> — факт прохождения Run‑and‑Gun</li>
         <li>GET <code>/content/version</code> — версия контента</li>
-        <li>GET <code>/actions/{id}</code> — карточка действия</li>
       </ul>
     </section>
 
+    <!-- 8. Пример запроса/ответа -->
     <section>
-      <h3>Пример запроса/ответа</h3>
+      <h3>Пример запроса</h3>
       <pre><code class="language-json">{
-  "goal_id": "item_x",
-  "game_id": "game_x",
+  "goal_id": "s_rank_isle1",
   "profile": {
-    "level": 35,
-    "perks": ["stealth_2"],
-    "inventory": ["old_town_key"],
-    "map_knowledge": {"opened_percent": 62, "waypoints": 14},
-    "skill_profile": {"combat": 0.7, "puzzle": 0.5, "stealth": 0.8}
+    "weapons_owned": ["Peashooter"],
+    "charms_owned": ["SmokeBomb"],
+    "super_arts_unlocked": 0,
+    "coins_owned": 0,
+    "skill_profile": {
+      "accuracy": 0.55, "survival": 0.50,
+      "parry_skill": 0.40, "movement": 0.60,
+      "pattern_recognition": 0.45
+    }
   },
-  "preferences": {"optimize": "time", "risk_tolerance": "medium"}
+  "preferences": {"optimize":"reliability","rank_target":"S"}
 }</code></pre>
+      <h3>Упрощённый ответ</h3>
       <pre><code class="language-json">{
   "plans": [
     {
-      "id": "A",
       "label": "быстрее",
-      "eta_min": 35,
-      "eta_max": 52,
-      "confidence": 0.72,
+      "eta_min": 25, "eta_max": 40, "confidence": 0.70,
       "steps": [
-        {"action_id":"travel_r3","title":"Регион 3","eta":"10-15"},
-        {"action_id":"dungeon_a","title":"Подземелье А","eta":"15-25"},
-        {"action_id":"boss_guard","title":"Босс Страж","eta":"5-12"}
+        {"action_id":"run_forest_follies","title":"Forest Follies (coins)","eta":"6-10"},
+        {"action_id":"buy_roundabout","title":"Покупка Roundabout","eta":"<1"},
+        {"action_id":"boss_botanic_s","title":"Botanic Panic (S)","eta":"3-6"}
       ]
     }
   ]
 }</code></pre>
     </section>
 
+    <!-- 9. Модель времени -->
     <section>
-      <h2>Данные и калибровка</h2>
+      <h2>Модель времени и попыток</h2>
       <ul>
-        <li>Эталон: вики/гайды/спидран-сводки.</li>
-        <li>Краудсорс: пользователи подтверждают время.</li>
-        <li>Храним min/median/p95; применяем коэффициенты игрока.</li>
+        <li>Босс: <i>фазы HP / эффективный DPS</i> (оружие × accuracy) + оверхед.</li>
+        <li>p<sub>success</sub> = sigmoid(a0 + a1·survival + a2·parry + a3·movement + a4·familiarity − a5·difficulty).</li>
+        <li>Ожидаемое: (T_raw + θ·T_raw·(1 − p)) / p, где θ≈0.5 — среднее время до смерти.</li>
+        <li>Run‑and‑Gun: T = T_base·(1 − movement·γ)·(1 − familiarity·δ) / p_success.</li>
       </ul>
     </section>
 
+    <!-- 10. Безопасность/ToS -->
     <section>
-      <h2>Юридика и безопасность</h2>
+      <h2>Безопасность и ToS</h2>
       <ul>
-        <li>Без чтения памяти процесса (античит).</li>
-        <li>Импорт сейва офлайн и по согласию, минимум данных.</li>
-        <li>Соблюдение ToS, публичные источники.</li>
+        <li>Без чтения памяти/инжекта. Ручной ввод/файл сейва (по желанию, с согласия).</li>
+        <li>Источник данных: публичные вики и speedrun‑метрики.</li>
+        <li>Телеметрия по времени — опт‑ин, минимум персональных данных.</li>
       </ul>
     </section>
 
+    <!-- 11. Бизнес и метрики -->
     <section>
       <h2>Бизнес‑модель и метрики</h2>
       <ul>
-        <li>Freemium + PRO аналитика.</li>
-        <li>DLC‑пакеты под сложные цели/боссы.</li>
-        <li>MAPE ETA, завершения планов, D7 ретеншн.</li>
+        <li>Freemium: базовый план бесплатно; PRO — «советник лоадаута», тренировки и аналитика.</li>
+        <li>Метрики: точность ETA (MAPE), доля завершений планов, снижение попыток, D7 ретеншн.</li>
       </ul>
     </section>
 
+    <!-- 12. План MVP -->
     <section>
-      <h2>План MVP (2–4 недели)</h2>
+      <h2>План MVP (2 недели)</h2>
       <ol>
-        <li>Одна игра, 2–3 цели, граф 20–40 действий.</li>
-        <li>Профиль → расчёт → альтернативы → чеклист.</li>
-        <li>Сбор фактического времени.</li>
+        <li>Сбор HP/фаз боссов, базового DPS оружий, маршрутов монет.</li>
+        <li>JSON‑граф 20–40 действий, оценщик времени/попыток.</li>
+        <li>Планировщик A* + Монте‑Карло; 2–3 альтернативы.</li>
+        <li>UI: профиль → план → альтернативы → чеклист → пересчёт.</li>
       </ol>
     </section>
 
+    <!-- 13. Финал -->
     <section data-background="#111" data-background-gradient="radial-gradient(#111, #222)">
-      <h2 style="color:#fff">Спасибо!</h2>
-      <p style="color:#ddd">Готов адаптировать под выбранную игру.</p>
-      <p style="color:#9ad1ff">github pages ready • PDF: ?print-pdf</p>
+      <h2 style="color:#fff">Cuphead MVP — готово к демо</h2>
+      <p style="color:#ddd">Готов адаптировать под ваши цели прямо на занятии.</p>
+      <p style="color:#9ad1ff">PDF: ?print-pdf • PPTX: см. marp-cuphead.md</p>
     </section>
 
   </div>
 </div>
 
+<!-- Scripts -->
 <script src="https://unpkg.com/reveal.js@5/dist/reveal.js"></script>
 <script src="https://unpkg.com/reveal.js@5/plugin/highlight/highlight.js"></script>
 <script>
