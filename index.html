@@ -12,6 +12,24 @@
   <!-- Custom styles -->
   <link rel="stylesheet" href="styles.css">
   <meta name="description" content="MVP: персональный планировщик прогресса для Cuphead. Маршруты к целям, оценка времени и рекомендации лоадаута с учетом навыков игрока." />
+
+  <style>
+    .screenshot {
+      max-width: 1000px;
+      width: 90%;
+      height: auto;
+      display: block;
+      margin: 0.6rem auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(2,6,23,0.6);
+    }
+    .slide-img-caption {
+      text-align: center;
+      color: #9ad1ff;
+      margin-top: 0.6rem;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
 <body>
 <div class="reveal">
@@ -20,10 +38,6 @@
     <!-- 1. Титул -->
     <section data-background-color="#0b132b" data-background-gradient="radial-gradient(#0b132b, #1c2541)">
       <h1 style="color:#fff">Progress Path Planner</h1>
-      <!-- <h3 style="color:#e0e0e0">Персональные маршруты к целям + оценка времени</h3> -->
-      <!-- <p style="color:#9ad1ff">MVP для одной игры — Cuphead</p> -->
-      <!-- <p style="color:#c7f0ff">Made by @PetrosiunArtem</p> -->
-      <!-- <aside class="notes">Питч: строим лучший порядок уровней/покупок/практик под навыки игрока, показываем альтернативы и ETA.</aside> -->
     </section>
 
     <!-- 2. Проблема -->
@@ -94,143 +108,23 @@
       </ol>
     </section>
 
-    <!-- 6. Дизайн — План + альтернативы -->
     <section>
-      <h2>Дизайн — План и альтернативы</h2>
-      <div class="wireframe">
-        <div class="wf-header">Цель: S‑Rank на Isle I</div>
-        <div class="wf-columns">
-          <div class="wf-col">
-            <div class="wf-title">A — быстрее</div>
-            <ol class="wf-steps">
-              <li>Forest Follies (5 монет) — 6–10</li>
-              <li>Покупка Roundabout — &lt;1</li>
-              <li>Botanic Panic (S) — 3–6 • попыток 1.4</li>
-              <li>Practice Parry — 5</li>
-              <li>Goopy Le Grande (S) — 3–8 • попыток 1.8</li>
-            </ol>
-            <div class="wf-badge success">Итого: 25–40 мин</div>
-          </div>
-          <div class="wf-col">
-            <div class="wf-title">B — надёжнее</div>
-            <ol class="wf-steps">
-              <li>Practice Parry — 10</li>
-              <li>Forest Follies (5 монет) — 7–12</li>
-              <li>Покупка Spread — &lt;1</li>
-              <li>Goopy Le Grande (S) — 4–7 • попыток 1.3</li>
-            </ol>
-            <div class="wf-badge">Итого: 30–45 мин</div>
-          </div>
-          <div class="wf-col">
-            <div class="wf-title">C — экономия монет</div>
-            <ol class="wf-steps">
-              <li>Секретная монета — 1–2</li>
-              <li>Treetop Trouble (5 монет) — 7–12</li>
-              <li>Покупка Charge — &lt;1</li>
-            </ol>
-            <div class="wf-badge warn">Итого: 20–35 • высокий риск</div>
-          </div>
-        </div>
-        <div class="wf-footer"><button>Экспорт чеклист</button> <button class="ghost">Пересчитать</button></div>
-      </div>
+      <h2>Интерфейс — Обзор</h2>
+      <img class="screenshot" src="images/menu.jpg" alt="Обзор: дашборд, быстрый старт и статистика">
+      <div class="slide-img-caption">Обзор: дашборд, быстрый старт и основные показатели</div>
     </section>
 
-    <!-- 7. API -->
     <section>
-      <h2>Описание API (REST)</h2>
-      <p>Base: <code>/api/v1</code></p>
-      <ul>
-        <li>GET <code>/game/cuphead/goals</code> — список целей</li>
-        <li>POST <code>/game/cuphead/plan</code> — расчёт плана по профилю</li>
-        <li>PATCH <code>/profiles/{id}/progress</code> — прогресс уровней/покупок</li>
-        <li>POST <code>/telemetry/boss_attempt</code> — факт попытки босса</li>
-        <li>POST <code>/telemetry/run_level</code> — факт прохождения Run‑and‑Gun</li>
-        <li>GET <code>/content/version</code> — версия контента</li>
-      </ul>
+      <h2>Интерфейс — Профиль игрока (оружие)</h2>
+      <img class="screenshot" src="images/profile.jpg" alt="Список доступного оружия в профиле игрока">
+      <div class="slide-img-caption">Профиль игрока — доступное оружие и выбор экипировки</div>
     </section>
 
-    <!-- 8. Пример запроса/ответа -->
     <section>
-      <h3>Пример запроса</h3>
-      <pre><code class="language-json">{
-  "goal_id": "s_rank_isle1",
-  "profile": {
-    "weapons_owned": ["Peashooter"],
-    "charms_owned": ["SmokeBomb"],
-    "super_arts_unlocked": 0,
-    "coins_owned": 0,
-    "skill_profile": {
-      "accuracy": 0.55, "survival": 0.50,
-      "parry_skill": 0.40, "movement": 0.60,
-      "pattern_recognition": 0.45
-    }
-  },
-  "preferences": {"optimize":"reliability","rank_target":"S"}
-}</code></pre>
-      <h3>Упрощённый ответ</h3>
-      <pre><code class="language-json">{
-  "plans": [
-    {
-      "label": "быстрее",
-      "eta_min": 25, "eta_max": 40, "confidence": 0.70,
-      "steps": [
-        {"action_id":"run_forest_follies","title":"Forest Follies (coins)","eta":"6-10"},
-        {"action_id":"buy_roundabout","title":"Покупка Roundabout","eta":"<1"},
-        {"action_id":"boss_botanic_s","title":"Botanic Panic (S)","eta":"3-6"}
-      ]
-    }
-  ]
-}</code></pre>
+      <h2>Интерфейс — Построить маршрут</h2>
+      <img class="screenshot" src="images/find_path.jpg" alt="Выбор цели и кнопка построения маршрутов">
+      <div class="slide-img-caption">Построение маршрута — выбор цели и запуск генерации</div>
     </section>
-
-    <!-- 9. Модель времени -->
-    <section>
-      <h2>Модель времени и попыток</h2>
-      <ul>
-        <li>Босс: <i>фазы HP / эффективный DPS</i> (оружие × accuracy) + оверхед.</li>
-        <li>p<sub>success</sub> = sigmoid(a0 + a1·survival + a2·parry + a3·movement + a4·familiarity − a5·difficulty).</li>
-        <li>Ожидаемое: (T_raw + θ·T_raw·(1 − p)) / p, где θ≈0.5 — среднее время до смерти.</li>
-        <li>Run‑and‑Gun: T = T_base·(1 − movement·γ)·(1 − familiarity·δ) / p_success.</li>
-      </ul>
-    </section>
-
-    <!-- 10. Безопасность/ToS -->
-    <section>
-      <h2>Безопасность и ToS</h2>
-      <ul>
-        <li>Без чтения памяти/инжекта. Ручной ввод/файл сейва (по желанию, с согласия).</li>
-        <li>Источник данных: публичные вики и speedrun‑метрики.</li>
-        <li>Телеметрия по времени — опт‑ин, минимум персональных данных.</li>
-      </ul>
-    </section>
-
-    <!-- 11. Бизнес и метрики -->
-    <section>
-      <h2>Бизнес‑модель и метрики</h2>
-      <ul>
-        <li>Freemium: базовый план бесплатно; PRO — «советник лоадаута», тренировки и аналитика.</li>
-        <li>Метрики: точность ETA (MAPE), доля завершений планов, снижение попыток, D7 ретеншн.</li>
-      </ul>
-    </section>
-
-    <!-- 12. План MVP -->
-    <section>
-      <h2>План MVP (2 недели)</h2>
-      <ol>
-        <li>Сбор HP/фаз боссов, базового DPS оружий, маршрутов монет.</li>
-        <li>JSON‑граф 20–40 действий, оценщик времени/попыток.</li>
-        <li>Планировщик A* + Монте‑Карло; 2–3 альтернативы.</li>
-        <li>UI: профиль → план → альтернативы → чеклист → пересчёт.</li>
-      </ol>
-    </section>
-
-    <!-- 13. Финал -->
-    <section data-background="#111" data-background-gradient="radial-gradient(#111, #222)">
-      <h2 style="color:#fff">Cuphead MVP — готово к демо</h2>
-      <p style="color:#ddd">Готов адаптировать под ваши цели прямо на занятии.</p>
-      <p style="color:#9ad1ff">PDF: ?print-pdf • PPTX: см. marp-cuphead.md</p>
-    </section>
-
   </div>
 </div>
 
